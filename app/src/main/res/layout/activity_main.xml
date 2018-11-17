@@ -16,13 +16,14 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <ImageView
+    <io.github.kafumi.imageviewscaleshowcase.util.OutlinedImageView
       android:id="@+id/image_view"
       android:layout_width="320dp"
       android:layout_height="320dp"
       android:layout_marginTop="16dp"
-      android:background="#3fff00ff"
       android:scaleType="@{viewModel.scaleType}"
+      app:outlineColor="#ff0000"
+      app:outlineWidth="1dp"
       app:srcCompat="@{viewModel.imageResId}"
       tools:ignore="ContentDescription"
       tools:src="@drawable/large" />
