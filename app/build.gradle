@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.facebook.testing.screenshot'
 
 android {
     compileSdkVersion 28
@@ -10,7 +11,7 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "io.github.kafumi.imageviewscaleshowcase.ScreenshotTestRunner"
     }
     buildTypes {
         release {
@@ -20,6 +21,9 @@ android {
     }
     dataBinding {
         enabled = true
+    }
+    testOptions {
+        animationsDisabled = true
     }
 }
 
@@ -31,5 +35,22 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test:rules:1.1.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.0.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+}
+
+task cleanScreenshots(type: Delete) {
+    delete 'screenshots'
+}
+task moveScreenshots(type: Copy, dependsOn: cleanScreenshots) {
+    from('build/screenshotsDebugAndroidTest') {
+        include 'screenshot*.png'
+    }
+    into 'screenshots'
+}
+afterEvaluate {
+    pullDebugAndroidTestScreenshots.finalizedBy moveScreenshots
+    runDebugAndroidTestScreenshotTest.finalizedBy moveScreenshots
+    verifyDebugAndroidTestScreenshotTest.finalizedBy moveScreenshots
 }
